@@ -17,6 +17,11 @@ class MealTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if(NSUserDefaults.standardUserDefaults().objectForKey("token") == nil){
+            let signInVC = SignInViewController()
+            navigationController?.presentViewController(signInVC, animated: true, completion: nil)
+         }
+        
         // Use the edit button item provided by the table view controller.
         navigationItem.leftBarButtonItem = editButtonItem()
         
