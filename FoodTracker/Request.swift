@@ -12,12 +12,12 @@ class Request: NSObject {
     
     var token: String?
 
-    func signUpToken(user: User, completionHandler: (token: String)->Void) {
+    func signUpToken(user: User, completionHandler: (token: String, error: String?)->Void) {
         //declare parameter as a dictionary which contains string as key and value combination.
-        let parameters = ["name": user.username, "password": user.password] as Dictionary<String, String>
+        let parameters = ["username": user.username, "password": user.password] as Dictionary<String, String>
         
         //create the url with NSURL
-        let url = NSURL(string: "http://localhost:8000/signup") //change the url
+        let url = NSURL(string: "http://159.203.243.24:8000/signup") //change the url
         
         //create the session object
         let session = NSURLSession.sharedSession()
@@ -35,13 +35,30 @@ class Request: NSObject {
         //create dataTask using the session object to send data to the server
         let task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
             print("Response: \(response)")
-            
-            if let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: .MutableLeaves) as? NSDictionary {
-                
-                let userDictionary = response!["user"]
-                self.token = userDictionary!["token"] as? String
-                completionHandler(token: self.token!)
+            print("Error: \(error)")
+            if (error == nil)
+            {
+                if data != nil {
+                if let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: .MutableLeaves) as? NSDictionary {
+                    let errorValue = response!["error"] as! String?;
+                    
+                    if (errorValue == nil) {
+                        let userDictionary = response!["user"]
+                        self.token = userDictionary!["token"] as? String
+                        completionHandler(token: self.token!, error: error?.localizedDescription)
+                    }
+                    else
+                    {
+                        completionHandler(token: "", error: errorValue);
+                    }
+                    } }
             }
+            //connection error
+            else
+            {
+                completionHandler(token: "", error: error?.localizedDescription);
+            }
+            
         })
         task.resume()
         

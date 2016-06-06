@@ -18,8 +18,7 @@ class MealTableViewController: UITableViewController {
         super.viewDidLoad()
         
         if(NSUserDefaults.standardUserDefaults().objectForKey("token") == nil){
-            let signInVC = SignInViewController()
-            navigationController?.presentViewController(signInVC, animated: true, completion: nil)
+            performSegueWithIdentifier("Login", sender: nil)
          }
         
         // Use the edit button item provided by the table view controller.

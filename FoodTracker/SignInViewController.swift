@@ -16,10 +16,12 @@ class SignInViewController: UIViewController {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
+    @IBOutlet weak var errorLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.setNavigationBarHidden(true, animated: false)
         // Do any additional setup after loading the view.
     }
     
@@ -38,24 +40,40 @@ class SignInViewController: UIViewController {
      }
      */
     
+    @IBAction func loginUser(sender: AnyObject) {
+        
+        
+    }
+    
     @IBAction func signUpUser(sender: AnyObject) {
         
         if self.passwordTextField.text!.characters.count < 8 {
-            print ("Please enter a password that is a minimum of 8 characters")
+            self.errorLabel.text = "Please enter a password that is a minimum of 8 characters"
         }
+        
+            
         else {
             let user = User(username: usernameTextField.text!, password: passwordTextField.text!)
             let request = Request()
-            request.signUpToken(user, completionHandler: { (token) in
+            request.signUpToken(user, completionHandler: { (token, error) in
                 user.token = token
+                if (error != nil) {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.errorLabel.text = error;
+                    })
+                }
+                else {
+
+                    //set user defaults
+                    let prefs = NSUserDefaults.standardUserDefaults()
+                    prefs.setValue(user.token, forKey: "token")
+                    
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    })
+                    
+                }
                 
-                //set user defaults
-                let prefs = NSUserDefaults.standardUserDefaults()
-                prefs.setValue(user.username, forKey: "username")
-                prefs.setValue(user.password, forKey: "password")
-                prefs.setValue(user.token, forKey: "token")
-                
-                self.navigationController?.popViewControllerAnimated(true)
             })
             
         }
