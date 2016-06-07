@@ -42,7 +42,27 @@ class SignInViewController: UIViewController {
     
     @IBAction func loginUser(sender: AnyObject) {
         
-        
+        let user = User(username: usernameTextField.text!, password: passwordTextField.text!)
+        let request = Request()
+        request.loginToken(user, completionHandler: {(token, error) in
+            user.token = token
+            if (error != nil) {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.errorLabel.text = error;
+                })
+            }
+            else {
+                
+                //set user defaults
+                let prefs = NSUserDefaults.standardUserDefaults()
+                prefs.setValue(user.token, forKey: "token")
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.navigationController?.popViewControllerAnimated(true)
+                    
+                })
+            }
+        })
     }
     
     @IBAction func signUpUser(sender: AnyObject) {
@@ -51,7 +71,6 @@ class SignInViewController: UIViewController {
             self.errorLabel.text = "Please enter a password that is a minimum of 8 characters"
         }
         
-            
         else {
             let user = User(username: usernameTextField.text!, password: passwordTextField.text!)
             let request = Request()
