@@ -15,6 +15,8 @@ class Meal: NSObject, NSCoding {
     var name: String
     var photo: UIImage?
     var rating: Int
+    var descrip: String?
+    var calories: Int?
     
     // MARK: Archiving Paths
     
@@ -27,6 +29,8 @@ class Meal: NSObject, NSCoding {
         static let nameKey = "name"
         static let photoKey = "photo"
         static let ratingKey = "rating"
+        static let descripKey = "descrip"
+        static let caloriesKey = "calories"
     }
 
     // MARK: Initialization
@@ -51,6 +55,8 @@ class Meal: NSObject, NSCoding {
         aCoder.encodeObject(name, forKey: PropertyKey.nameKey)
         aCoder.encodeObject(photo, forKey: PropertyKey.photoKey)
         aCoder.encodeInteger(rating, forKey: PropertyKey.ratingKey)
+        aCoder.encodeObject(descrip, forKey: PropertyKey.descripKey)
+        aCoder.encodeInteger(calories!, forKey: PropertyKey.caloriesKey)
     }
     
     required convenience init?(coder aDecoder: NSCoder) {

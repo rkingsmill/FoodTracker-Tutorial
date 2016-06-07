@@ -16,7 +16,8 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
     @IBOutlet weak var photoImageView: UIImageView!
     @IBOutlet weak var ratingControl: RatingControl!
     @IBOutlet weak var saveButton: UIBarButtonItem!
-    
+    @IBOutlet weak var descripTextField: UITextField!
+    @IBOutlet weak var caloriesTextField: UITextField!
     /*
         This value is either passed by `MealTableViewController` in `prepareForSegue(_:sender:)`
         or constructed as part of adding a new meal.
